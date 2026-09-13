@@ -32,7 +32,9 @@
 [data-testid="stToolbar"],
 [data-testid="stDecoration"],
 [data-testid="stStatusWidget"],
-[data-testid="manage-app-button"] {
+[data-testid="manage-app-button"],
+[data-testid="stSidebar"],
+[data-testid="stSidebarCollapsedControl"] {
     display: none;
     visibility: hidden;
 }
@@ -227,6 +229,44 @@
     background: rgba(82,100,124,.10);
     border: 1px solid rgba(82,100,124,.20);
     box-shadow: none;
+}
+
+[data-testid="stVerticalBlockBorderWrapper"]:has([data-testid="stPageLink"]) {
+    padding: .7rem .95rem .8rem;
+    margin: 0 0 1.1rem;
+    background: linear-gradient(135deg, rgba(0,163,224,.08), rgba(255,255,255,.94));
+    border-left: 3px solid var(--rm-cyan);
+}
+
+a[data-testid="stPageLink-NavLink"] {
+    display: inline-flex !important;
+    align-items: center;
+    gap: .5rem;
+    padding: .45rem .95rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--rm-b3-blue), #0758ad 56%, var(--rm-cyan));
+    box-shadow: 0 8px 16px rgba(1,54,129,.18);
+    color: #ffffff !important;
+    text-decoration: none !important;
+    transition: box-shadow .15s ease, transform .15s ease;
+}
+
+a[data-testid="stPageLink-NavLink"]:hover {
+    box-shadow: 0 10px 20px rgba(1,54,129,.26);
+    transform: translateY(-1px);
+}
+
+a[data-testid="stPageLink-NavLink"] p {
+    margin: 0;
+    color: #ffffff !important;
+    font-weight: 800;
+    font-size: .85rem;
+}
+
+.rm-nav-hint {
+    margin: .35rem 0 0;
+    color: var(--rm-muted);
+    font-size: .82rem;
 }
 
 .rm-empty-state {

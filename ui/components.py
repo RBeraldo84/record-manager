@@ -27,16 +27,19 @@ COLUMN_LABELS = {
 }
 
 
+_ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets"
+
+
 @st.cache_data
-def _read_css(app_file: str) -> str:
-    css_path = Path(app_file).parent / "assets" / "style.css"
+def _read_css() -> str:
+    css_path = _ASSETS_DIR / "style.css"
     if css_path.exists():
         return css_path.read_text(encoding="utf-8")
     return ""
 
 
-def load_css(app_file: str) -> None:
-    css_text = _read_css(app_file)
+def load_css() -> None:
+    css_text = _read_css()
     if css_text:
         st.markdown(f"<style>{css_text}</style>", unsafe_allow_html=True)
 
@@ -65,8 +68,8 @@ def get_current_user() -> str:
     return os.getenv("DATABRICKS_USER", "Ambiente local")
 
 
-def render_hero(app_file: str) -> None:
-    logo_src = _asset_data_uri(app_file, "b3.png")
+def render_hero(title: str = "Controle de Parâmetros", subtitle: str = "") -> None:
+    logo_src = _asset_data_uri("b3.png")
     logo_markup = ""
     if logo_src:
         logo_markup = (
@@ -74,18 +77,24 @@ def render_hero(app_file: str) -> None:
         )
 
     st.markdown(
-        f"""<section class="rm-hero"><div class="rm-brand-lockup">{logo_markup}<div><p class="rm-kicker"></p><h1>Controle de Parâmetros</h1><p class="rm-subtitle"></p></div></div></section>""",
+        f"""<section class="rm-hero"><div class="rm-brand-lockup">{logo_markup}<div><p class="rm-kicker"></p><h1>{escape(title)}</h1><p class="rm-subtitle">{escape(subtitle)}</p></div></div></section>""",
         unsafe_allow_html=True,
     )
 
 
 @st.cache_data
-def _asset_data_uri(app_file: str, filename: str) -> str | None:
-    asset_path = Path(app_file).parent / "assets" / filename
+def _asset_data_uri(filename: str) -> str | None:
+    asset_path = _ASSETS_DIR / filename
     if not asset_path.exists():
         return None
     encoded = base64.b64encode(asset_path.read_bytes()).decode("ascii")
     return f"data:image/png;base64,{encoded}"
+
+
+def render_page_link(page: str, label: str, icon: str, hint: str) -> None:
+    with st.container(border=True):
+        st.page_link(page, label=label, icon=icon)
+        st.markdown(f'<p class="rm-nav-hint">{escape(hint)}</p>', unsafe_allow_html=True)
 
 
 def render_metrics(df: pd.DataFrame, inactive_label: str = "Inativo") -> None:
