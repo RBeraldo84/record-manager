@@ -79,7 +79,8 @@ class RecordsRepository:
                     query,
                     (record_id, codigo, descricao, status, user),
                 )
-                inserted = cursor.rowcount == 1
+                result = cursor.fetchone()
+                inserted = bool(result and result.num_inserted_rows == 1)
             if hasattr(connection, "commit"):
                 connection.commit()
 
@@ -116,7 +117,8 @@ class RecordsRepository:
                     query,
                     (codigo, descricao, status, user, record_id, codigo, record_id),
                 )
-                updated = cursor.rowcount == 1
+                result = cursor.fetchone()
+                updated = bool(result and result.num_affected_rows == 1)
             if hasattr(connection, "commit"):
                 connection.commit()
 

@@ -165,7 +165,7 @@
     border-bottom: 1px solid rgba(1,54,129,.12);
 }
 
-.st-key-records_scroll [data-testid="stMarkdownContainer"] p {
+[data-testid="stVerticalBlockBorderWrapper"] [data-testid="stMarkdownContainer"] p {
     color: var(--rm-ink);
     font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
     font-size: .82rem;
@@ -179,15 +179,15 @@
     background: rgba(255,255,255,.72);
 }
 
-.st-key-records_scroll::-webkit-scrollbar {
+[data-testid="stVerticalBlockBorderWrapper"]::-webkit-scrollbar {
     width: 10px;
 }
 
-.st-key-records_scroll::-webkit-scrollbar-track {
+[data-testid="stVerticalBlockBorderWrapper"]::-webkit-scrollbar-track {
     background: rgba(226,235,247,.9);
 }
 
-.st-key-records_scroll::-webkit-scrollbar-thumb {
+[data-testid="stVerticalBlockBorderWrapper"]::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, var(--rm-b3-blue), var(--rm-cyan));
     border: 2px solid rgba(226,235,247,.9);
     border-radius: 999px;

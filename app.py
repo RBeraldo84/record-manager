@@ -51,13 +51,13 @@ with left:
 
 with middle:
     st.markdown('<div class="rm-action-spacer"></div>', unsafe_allow_html=True)
-    refresh = st.button("Atualizar", width="stretch")
+    refresh = st.button("Atualizar", use_container_width=True)
 
 with right:
     st.markdown('<div class="rm-action-spacer"></div>', unsafe_allow_html=True)
     new_record = st.button(
         "+ Novo registro",
-        width="stretch",
+        use_container_width=True,
         type="primary",
     )
 
@@ -69,9 +69,9 @@ def new_record_dialog():
         form_status = st.selectbox("Status", ["ATIVO", "INATIVO"])
         save_col, cancel_col = st.columns(2)
         with save_col:
-            submitted = st.form_submit_button("Salvar registro", type="primary", width="stretch")
+            submitted = st.form_submit_button("Salvar registro", type="primary", use_container_width=True)
         with cancel_col:
-            cancelled = st.form_submit_button("Cancelar", width="stretch")
+            cancelled = st.form_submit_button("Cancelar", use_container_width=True)
 
         if submitted:
             if not form_code.strip() or not form_description.strip():
@@ -101,9 +101,9 @@ def edit_record_dialog(row):
         edit_status = st.selectbox("Status", status_values, index=status_values.index(current_status))
         save_col, cancel_col = st.columns(2)
         with save_col:
-            update_submitted = st.form_submit_button("Salvar alterações", type="primary", width="stretch")
+            update_submitted = st.form_submit_button("Salvar alterações", type="primary", use_container_width=True)
         with cancel_col:
-            cancel_edit = st.form_submit_button("Cancelar", width="stretch")
+            cancel_edit = st.form_submit_button("Cancelar", use_container_width=True)
 
         if update_submitted:
             if not edit_code.strip() or not edit_description.strip():
@@ -126,7 +126,7 @@ def delete_record_dialog(row):
     st.warning(f"Excluir o registro **{getattr(row, 'codigo', '')}**? A ação será auditada.")
     confirm_col, cancel_col = st.columns(2)
     with confirm_col:
-        if st.button("Confirmar exclusão", type="primary", width="stretch", key="confirm_delete_action"):
+        if st.button("Confirmar exclusão", type="primary", use_container_width=True, key="confirm_delete_action"):
             try:
                 with st.spinner("Excluindo registro..."):
                     delete_record(row_id, user)
@@ -135,7 +135,7 @@ def delete_record_dialog(row):
             except Exception as exc:
                 st.error(f"Não foi possível excluir o registro: {exc}")
     with cancel_col:
-        if st.button("Cancelar", width="stretch"):
+        if st.button("Cancelar", use_container_width=True):
             st.rerun()
 
 
@@ -157,7 +157,7 @@ if not working_df.empty:
     for column, label in zip(header, ["Código", "Descrição", "Status", "Criado em", "Criado por", "Ações"]):
         column.markdown(f'<span class="rm-table-heading">{label}</span>', unsafe_allow_html=True)
 
-    with st.container(height=248, key="records_scroll"):
+    with st.container(height=248):
         for row in working_df.itertuples(index=False):
             row_id = getattr(row, "id", None)
             values = st.columns([1.25, 2.85, .85, 1.55, 1.55, 1.3])
