@@ -18,7 +18,7 @@ from ui.components import (
 )
 
 st.set_page_config(
-    page_title="Gestão de Registros",
+    page_title="Atualização de parâmetros",
     page_icon=str(Path(__file__).parent / "assets" / "b3.png"),
     layout="wide",
 )
@@ -37,8 +37,8 @@ except Exception as exc:
 
 render_metrics(df)
 render_section_title(
-    f"Base {get_settings().tables.records_table}",
-    "Dados mais recentes primeiro",
+    f"Tabela {get_settings().tables.records_table}",
+    "Dados ordenados por registro mais recente",
 )
 
 left, middle, right = st.columns([4, 1, 1])

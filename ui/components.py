@@ -74,7 +74,7 @@ def render_hero(app_file: str) -> None:
         )
 
     st.markdown(
-        f"""<section class="rm-hero"><div class="rm-brand-lockup">{logo_markup}<div><p class="rm-kicker">RECORD / MANAGER</p><h1>Gestão de Registros</h1><p class="rm-subtitle">Controle operacional com leitura rápida, busca precisa e sinais visuais claros.</p></div></div></section>""",
+        f"""<section class="rm-hero"><div class="rm-brand-lockup">{logo_markup}<div><p class="rm-kicker"></p><h1>Controle de Parâmetros</h1><p class="rm-subtitle"></p></div></div></section>""",
         unsafe_allow_html=True,
     )
 
