@@ -97,13 +97,13 @@ def render_page_link(page: str, label: str, icon: str, hint: str) -> None:
         st.markdown(f'<p class="rm-nav-hint">{escape(hint)}</p>', unsafe_allow_html=True)
 
 
-def render_metrics(df: pd.DataFrame, inactive_label: str = "Inativo") -> None:
+def render_metrics(df: pd.DataFrame) -> None:
     total_records = len(df)
     active_records = 0
     if not df.empty and "status" in df.columns:
         status_series = df["status"].fillna("").astype(str).str.upper()
         active_records = int(status_series.eq("ATIVO").sum())
-    other_statuses = total_records - active_records
+    inactive_records = total_records - active_records
 
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -111,7 +111,24 @@ def render_metrics(df: pd.DataFrame, inactive_label: str = "Inativo") -> None:
     with col2:
         st.metric("Ativos", active_records)
     with col3:
-        st.metric(inactive_label, other_statuses)
+        st.metric("Inativos", inactive_records)
+
+
+_STATUS_FILTER_OPTIONS = {"Todos": None, "Ativos": "ATIVO", "Inativos": "INATIVO"}
+
+
+def render_status_filter() -> str | None:
+    """Renders a horizontal Todos/Ativos/Inativos filter.
+
+    Returns the selected status filter ("ATIVO", "INATIVO", or None for all).
+    """
+    choice = st.radio(
+        "Filtrar por status",
+        options=list(_STATUS_FILTER_OPTIONS),
+        horizontal=True,
+        key="rm_status_filter_choice",
+    )
+    return _STATUS_FILTER_OPTIONS[choice]
 
 
 def render_section_title(title: str, subtitle: str) -> None:
@@ -121,15 +138,19 @@ def render_section_title(title: str, subtitle: str) -> None:
     )
 
 
-def filter_records(df: pd.DataFrame, search_term: str) -> pd.DataFrame:
-    if not search_term or df.empty:
-        return df.copy()
+def filter_records(df: pd.DataFrame, search_term: str, status_filter: str | None = None) -> pd.DataFrame:
+    result = df
+    if status_filter and not df.empty and "status" in df.columns:
+        result = result[result["status"].fillna("").astype(str).str.upper() == status_filter]
+
+    if not search_term or result.empty:
+        return result.copy()
 
     mask = (
-        df["codigo"].fillna("").astype(str).str.contains(search_term, case=False, regex=False)
-        | df["descricao"].fillna("").astype(str).str.contains(search_term, case=False, regex=False)
+        result["codigo"].fillna("").astype(str).str.contains(search_term, case=False, regex=False)
+        | result["descricao"].fillna("").astype(str).str.contains(search_term, case=False, regex=False)
     )
-    return df[mask]
+    return result[mask]
 
 
 def status_badge_html(status: str) -> str:
@@ -138,10 +159,13 @@ def status_badge_html(status: str) -> str:
     return f'<span class="rm-status-badge {variant}">{escape(value)}</span>'
 
 
-def render_empty_state(search_term: str) -> None:
+def render_empty_state(search_term: str, status_filter: str | None = None) -> None:
     if search_term:
         title = "Nenhum registro encontrado"
         subtitle = f'Nenhum resultado para "{escape(search_term)}". Tente outro termo de busca.'
+    elif status_filter:
+        title = "Nenhum registro encontrado"
+        subtitle = "Nenhum registro corresponde ao filtro selecionado acima."
     else:
         title = "Nenhum registro cadastrado"
         subtitle = 'Use "+ Novo registro" para criar o primeiro registro desta base.'

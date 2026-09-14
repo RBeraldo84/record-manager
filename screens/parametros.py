@@ -13,6 +13,7 @@ from ui.components import (
     render_metrics,
     render_page_link,
     render_section_title,
+    render_status_filter,
     status_badge_html,
 )
 
@@ -40,6 +41,8 @@ render_section_title(
     f"Tabela {get_settings().tables.records_table}",
     "Dados ordenados por registro mais recente",
 )
+
+status_filter = render_status_filter()
 
 left, middle, right = st.columns([4, 1, 1])
 
@@ -147,7 +150,7 @@ if refresh:
     st.rerun()
 
 search_term = search.strip()
-working_df = filter_records(df, search_term)
+working_df = filter_records(df, search_term, status_filter)
 
 if search_term:
     st.caption(f"{len(working_df)} de {len(df)} registros encontrados para “{search_term}”.")
@@ -173,7 +176,7 @@ if not working_df.empty:
             if delete_action.button("🗑", key=f"delete_{row_id}", help="Excluir registro"):
                 delete_record_dialog(row)
 else:
-    render_empty_state(search_term)
+    render_empty_state(search_term, status_filter)
 
 st.markdown(
     '<div class="rm-footer-watermark">Desenvolvido pelo time de dados - SLP</div>',
